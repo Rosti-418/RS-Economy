@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025 Rosti Studios. All rights reserved.
+ * Licensed under the Rosti Studios Minecraft Mod License (RSMML).
+ * For more information, see the LICENSE file in the project root
+ * or contact us via Discord: https://dsc.gg/rosti-studios
+ */
+
 package org.rseconomy.rs_economy;
 
 import com.google.gson.TypeAdapter;
@@ -7,14 +14,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 public class LocalDateAdapter extends TypeAdapter<LocalDate> {
-
     @Override
     public void write(JsonWriter out, LocalDate value) throws IOException {
-        out.value(value.toString()); // LocalDate wird als String gespeichert (z. B. "2025-01-01")
+        out.value(value.toString());
     }
 
     @Override
     public LocalDate read(JsonReader in) throws IOException {
-        return LocalDate.parse(in.nextString()); // String wird zurück zu LocalDate konvertiert
+        return LocalDate.parse(in.nextString());
     }
 }

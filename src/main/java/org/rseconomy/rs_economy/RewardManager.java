@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025 Rosti Studios. All rights reserved.
+ * Licensed under the Rosti Studios Minecraft Mod License (RSMML).
+ * For more information, see the LICENSE file in the project root
+ * or contact us via Discord: https://dsc.gg/rosti-studios
+ */
+
 package org.rseconomy.rs_economy;
 
 import net.minecraft.network.chat.Component;
