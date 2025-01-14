@@ -33,7 +33,6 @@ public class CommandManager {
      * Commands include balance checks, payments, rewards, and admin actions.
      */
     public void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
-
         dispatcher.register(Commands.literal(Localization.get("command.pay"))
                 .then(Commands.argument(Localization.get("sugg.player"), EntityArgument.player())
                         .then(Commands.argument(Localization.get("sugg.amount"), DoubleArgumentType.doubleArg(0))
@@ -122,7 +121,9 @@ public class CommandManager {
                 .then(Commands.literal(Localization.get("sugg.language"))
                         .then(Commands.argument(Localization.get("sugg.language.locale"), StringArgumentType.string())
                                 .executes(context -> {
-                                    Locale newLocale = Locale.forLanguageTag(StringArgumentType.getString(context, Localization.get("sugg.language.locale")));
+                                    String localeArgument = StringArgumentType.getString(context, Localization.get("sugg.language.locale"));
+                                    Locale newLocale = Locale.forLanguageTag(localeArgument);
+                                    ServerDataManager.LOGGER.debug("Locale: " + newLocale.toString());
                                     context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.language", Localization.setLocale(newLocale))), true);
                                     return 1;
                                 })))

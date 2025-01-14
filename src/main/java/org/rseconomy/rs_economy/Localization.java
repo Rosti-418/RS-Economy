@@ -15,17 +15,23 @@ public class Localization {
     private static ResourceBundle messages;
 
     static {
-        try {
-            // Initialisiere das ResourceBundle mit dem Standardwert
-            messages = ResourceBundle.getBundle("locale", ServerDataManager.getLocale());
-        } catch (Exception e) {
-            messages = ResourceBundle.getBundle("locale", Locale.ENGLISH); // Fallback auf Englisch
-        }
+        // Initialisiere das ResourceBundle mit dem Standardwert
+        init();
+    }
+
+    /**
+     * Initialisiert das ResourceBundle mit der aktuellen Sprache des ServerDataManager.
+     * Wird beim Start der Anwendung mit eine Fallback-Sprache aufgerufen. Und erneut sobald die Serverdaten geladen wurden.
+     */
+    public static void init() {
+        messages = getResourceBundle(ServerDataManager.getLocale());
+        ServerDataManager.LOGGER.debug("Set current locale to: " + messages.getLocale());
     }
 
     public static String setLocale(Locale locale) {
         try {
-            messages = ResourceBundle.getBundle("locale", locale);
+            ServerDataManager.LOGGER.error("Locale: " + locale.toString());
+            messages = getResourceBundle(locale);
             ServerDataManager.setLocale(locale);
             return messages.getLocale().getDisplayLanguage();
         } catch (Exception e) {
@@ -48,5 +54,14 @@ public class Localization {
         } catch (Exception e) {
             return null; // Fallback für fehlende Schlüssel
         }
+    }
+
+    private static ResourceBundle getResourceBundle(Locale locale) {
+        ResourceBundle rb = ResourceBundle.getBundle("locale", locale);
+        // Falls die Sprache nicht unterstützt wird, wird auf die Standard-Sprache zurückgegriffen
+        if(!rb.getLocale().getDisplayLanguage().equals(locale.getDisplayLanguage())){
+            rb = ResourceBundle.getBundle("locale", Locale.of("en", "US"));
+        }
+        return rb;
     }
 }

@@ -23,14 +23,10 @@ import java.util.Map;
 
 public class ServerDataManager {
     private static final File SERVERDATA_FILE = new File("rs-economy_serverdata.json");
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServerDataManager.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(ServerDataManager.class);
     private static final Gson GSON = new Gson();
 
     private static Map<String, Object> data = new HashMap<>();
-
-    static {
-        loadServerData();
-    }
 
     public static void saveServerData() {
         try (FileWriter writer = new FileWriter(SERVERDATA_FILE)) {
@@ -45,21 +41,22 @@ public class ServerDataManager {
         if (!SERVERDATA_FILE.exists()) {
             LOGGER.warn(Localization.get("serverdata.load.missing"));
             initializeDefaultSettings();
-            return;
         }
-
-        try (FileReader reader = new FileReader(SERVERDATA_FILE)) {
-            Type type = new TypeToken<Map<String, Object>>() {
-            }.getType();
-            data = GSON.fromJson(reader, type);
-            LOGGER.info(Localization.get("serverdata.load.success"));
-        } catch (IOException e) {
-            LOGGER.error(Localization.get("serverdata.load.error"), e.getMessage());
-            initializeDefaultSettings();
-        } catch (Exception e) {
-            LOGGER.error(Localization.get("serverdata.load.error"), e.getMessage());
-            initializeDefaultSettings();
+        else{
+            try (FileReader reader = new FileReader(SERVERDATA_FILE)) {
+                Type type = new TypeToken<Map<String, Object>>() {
+                }.getType();
+                data = GSON.fromJson(reader, type);
+                LOGGER.info(Localization.get("serverdata.load.success"));
+            } catch (IOException e) {
+                LOGGER.error(Localization.get("serverdata.load.error"), e.getMessage());
+                initializeDefaultSettings();
+            } catch (Exception e) {
+                LOGGER.error(Localization.get("serverdata.load.error"), e.getMessage());
+                initializeDefaultSettings();
+            }
         }
+        Localization.init();
     }
 
     private static void initializeDefaultSettings() {
@@ -82,14 +79,17 @@ public class ServerDataManager {
     }
 
     public static Locale getLocale() {
-        String localeString = (String) data.getOrDefault("locale", "en");
+        String localeString = (String) data.getOrDefault("locale", "en_US");
+        if(localeString == null || localeString.trim().isEmpty()) {
+            localeString = "en_US";
+        }
         String[] parts = localeString.split("_");
         if (parts.length == 1) {
-            return new Locale(parts[0]);
+            return Locale.of(parts[0]);
         } else if (parts.length == 2) {
-            return new Locale(parts[0], parts[1]);
+            return Locale.of(parts[0], parts[1]);
         } else if (parts.length == 3) {
-            return new Locale(parts[0], parts[1], parts[2]);
+            return Locale.of(parts[0], parts[1], parts[2]);
         }
         LOGGER.warn(Localization.get("serverdata.locale.format.invalid"), localeString);
         return Locale.ENGLISH;
@@ -100,6 +100,7 @@ public class ServerDataManager {
             throw new IllegalArgumentException(Localization.get("serverdata.locale.format.null"));
         }
         data.put("locale", locale.toString());
+        LOGGER.debug("locale" + locale.toString());
         saveServerData();
     }
 
