@@ -120,9 +120,9 @@ public class CommandManager {
                                         return 1;
                                     }))))
                 .then(Commands.literal(Localization.get("sugg.language"))
-                        .then(Commands.argument(Localization.get("sugg.language"), StringArgumentType.string())
+                        .then(Commands.argument(Localization.get("sugg.language.locale"), StringArgumentType.string())
                                 .executes(context -> {
-                                    Locale newLocale = Locale.forLanguageTag(StringArgumentType.getString(context, Localization.get("sugg.language")));
+                                    Locale newLocale = Locale.forLanguageTag(StringArgumentType.getString(context, Localization.get("sugg.language.locale")));
                                     context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.language", Localization.setLocale(newLocale))), true);
                                     return 1;
                                 })))
