@@ -39,7 +39,7 @@ The mod provides a set of commands to manage the economy:
 ---
 
 ## Setup and Documentation
-Detailed setup instructions and configuration guides can be found in the [GitHub Wiki](https://github.com/your-repository/wiki).
+Detailed setup instructions and configuration guides can be found in the [GitHub Wiki](https://github.com/Rosti-418/RS-Economy/wiki).
 
 ---
 
