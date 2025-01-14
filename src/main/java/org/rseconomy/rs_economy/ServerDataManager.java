@@ -64,7 +64,7 @@ public class ServerDataManager {
 
     private static void initializeDefaultSettings() {
         data.put("currency", "Coins");
-        data.put("locale", "en");
+        data.put("locale", "en_US");
         data.put("dailyReward", "100-500");
         saveServerData();
     }
