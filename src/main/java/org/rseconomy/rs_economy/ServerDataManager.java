@@ -58,6 +58,7 @@ public class ServerDataManager {
     private static void initializeDefaultSettings() {
         data.put("currency", "Coins");
         data.put("locale", "en");
+        data.put("dailyReward", "100-500");
         saveServerData();
     }
 
@@ -92,6 +93,25 @@ public class ServerDataManager {
             throw new IllegalArgumentException(Localization.get("serverdata.locale.format.null"));
         }
         data.put("locale", locale.toString());
+        saveServerData();
+    }
+
+    public static int[] getDailyReward() {
+        String rewardString = (String) data.getOrDefault("dailyReward", "100_500");
+
+        String[] parts = rewardString.split("_");
+
+        int minReward = Integer.parseInt(parts[0]);
+        int maxReward = Integer.parseInt(parts[1]);
+
+        return new int[]{minReward, maxReward};
+    }
+
+    public static void setDailyReward(int minReward, int maxReward) {
+        if (minReward < 0 || maxReward < 0 || minReward > maxReward) {
+            throw new IllegalArgumentException(Localization.get("serverdata.dailyreward.invalid"));
+        }
+        data.put("dailyReward", minReward + "_" + maxReward);
         saveServerData();
     }
 }

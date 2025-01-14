@@ -2,6 +2,7 @@ package org.rseconomy.rs_economy;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -103,6 +104,14 @@ public class CommandManager {
                                     context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.rename", BalanceManager.CURRENCY)), true);
                                     return 1;
                                 })))
+                .then(Commands.literal(Localization.get("sugg.dailyreward.set"))
+                        .then(Commands.argument(Localization.get("sugg.dailyreward.min"), IntegerArgumentType.integer())
+                            .then(Commands.argument(Localization.get("sugg.dailyreward.max"), IntegerArgumentType.integer())
+                                    .executes(context -> {
+                                        ServerDataManager.setDailyReward(IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.min")), IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.max")));
+                                        context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.dailyreward", IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.min")), IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.max")))), true);
+                                        return 1;
+                                    }))))
                 .then(Commands.literal(Localization.get("sugg.language"))
                         .then(Commands.argument(Localization.get("sugg.language"), StringArgumentType.string())
                                 .executes(context -> {
