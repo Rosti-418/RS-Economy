@@ -7,7 +7,8 @@ Copyright (c) 2025 Rosti Studios. All rights reserved.
    - Commercial use, including but not limited to monetization through paywalls, selling access, or offering paid services based on this mod, is strictly prohibited.
 
 2. **Modifications:**
-   - Modifications or the creation of derivative works are **not allowed** without the explicit written permission of Rosti Studios.
+   - Modifications or the creation of derivative works of the **mod itself** are **not allowed** without the explicit written permission of Rosti Studios.
+   - **Localization files** may be modified and extended under the conditions outlined in Section 7.
 
 3. **Redistribution:**
    - This mod may not be redistributed or republished without the explicit written permission of Rosti Studios.
@@ -20,3 +21,11 @@ Copyright (c) 2025 Rosti Studios. All rights reserved.
 
 6. **Contact:**
    - For permissions or inquiries, please contact Rosti Studios via Discord: (https://dsc.gg/rosti-studios).
+
+7. **Localization Usage:**
+   - The localization files included with this mod may be **used, modified, and extended** to create or improve translations.
+   - Modifications and new translations must:
+     - Be used exclusively with this mod.
+     - Be distributed for free and under the same **non-commercial** terms as this mod.
+     - Include attribution to Rosti Studios as the original creator of the localization files.
+   - Redistribution of modified localization files must not misrepresent them as official files from Rosti Studios.
