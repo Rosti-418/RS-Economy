@@ -107,7 +107,7 @@ public class ServerDataManager {
     public static int[] getDailyReward() {
         String rewardString = (String) data.getOrDefault("dailyReward", "100_500");
 
-        String[] parts = rewardString.split("_");
+        String[] parts = rewardString.split("-");
 
         int minReward = Integer.parseInt(parts[0]);
         int maxReward = Integer.parseInt(parts[1]);
@@ -119,7 +119,7 @@ public class ServerDataManager {
         if (minReward < 0 || maxReward < 0 || minReward > maxReward) {
             throw new IllegalArgumentException(Localization.get("serverdata.dailyreward.invalid"));
         }
-        data.put("dailyReward", minReward + "_" + maxReward);
+        data.put("dailyReward", minReward + "-" + maxReward);
         saveServerData();
     }
 }

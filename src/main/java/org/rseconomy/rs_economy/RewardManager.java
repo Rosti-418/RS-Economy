@@ -42,7 +42,7 @@ public class RewardManager {
 
         lastClaimedRewards.put(playerId, today);
         int rewardRange[] = ServerDataManager.getDailyReward();
-        double rewardAmount = rewardRange[0] + random.nextInt(rewardRange[1]);
+        double rewardAmount =  random.nextInt(rewardRange[0], rewardRange[1] + 1);
         balanceManager.addBalance(playerId, rewardAmount);
         player.sendSystemMessage(Component.literal(Localization.get("reward.daily.redeem", rewardAmount, BalanceManager.CURRENCY)));
         return 1;
