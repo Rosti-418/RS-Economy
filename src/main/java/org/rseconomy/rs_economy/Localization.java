@@ -15,22 +15,22 @@ public class Localization {
     private static ResourceBundle messages;
 
     static {
-        // Initialisiere das ResourceBundle mit dem Standardwert
+        // Initialize the ResourceBundle with the default value
         init();
     }
 
     /**
-     * Initialisiert das ResourceBundle mit der aktuellen Sprache des ServerDataManager.
-     * Wird beim Start der Anwendung mit eine Fallback-Sprache aufgerufen. Und erneut sobald die Serverdaten geladen wurden.
+     * Initializes the ResourceBundle with the current language of the ServerDataManager.
+     * Is called with a fallback language when the application is started. And again as soon as the server data has been loaded.
      */
     public static void init() {
         messages = getResourceBundle(ServerDataManager.getLocale());
-        ServerDataManager.LOGGER.debug("Set current locale to: " + messages.getLocale());
+        //ServerDataManager.LOGGER.debug("Set current locale to: " + messages.getLocale());
     }
 
     public static String setLocale(Locale locale) {
         try {
-            ServerDataManager.LOGGER.error("Locale: " + locale.toString());
+            //ServerDataManager.LOGGER.error("Locale: " + locale.toString());
             messages = getResourceBundle(locale);
             ServerDataManager.setLocale(locale);
             return messages.getLocale().getDisplayLanguage();
@@ -52,13 +52,13 @@ public class Localization {
             String message = messages.getString(key);
             return MessageFormat.format(message, params);
         } catch (Exception e) {
-            return null; // Fallback für fehlende Schlüssel
+            return null; //Fallback for missing keys
         }
     }
 
     private static ResourceBundle getResourceBundle(Locale locale) {
         ResourceBundle rb = ResourceBundle.getBundle("locale", locale);
-        // Falls die Sprache nicht unterstützt wird, wird auf die Standard-Sprache zurückgegriffen
+        // If the language is not supported, the default language is used
         if(!rb.getLocale().getDisplayLanguage().equals(locale.getDisplayLanguage())){
             rb = ResourceBundle.getBundle("locale", Locale.of("en", "US"));
         }

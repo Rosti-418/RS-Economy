@@ -123,7 +123,7 @@ public class CommandManager {
                                 .executes(context -> {
                                     String localeArgument = StringArgumentType.getString(context, Localization.get("sugg.language.locale"));
                                     Locale newLocale = Locale.forLanguageTag(localeArgument);
-                                    ServerDataManager.LOGGER.debug("Locale: " + newLocale.toString());
+                                    //ServerDataManager.LOGGER.debug("Locale: " + newLocale.toString());
                                     context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.language", Localization.setLocale(newLocale))), true);
                                     return 1;
                                 })))

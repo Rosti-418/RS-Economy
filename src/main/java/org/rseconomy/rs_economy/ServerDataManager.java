@@ -100,7 +100,7 @@ public class ServerDataManager {
             throw new IllegalArgumentException(Localization.get("serverdata.locale.format.null"));
         }
         data.put("locale", locale.toString());
-        LOGGER.debug("locale" + locale.toString());
+        //LOGGER.debug("locale" + locale.toString());
         saveServerData();
     }
 
