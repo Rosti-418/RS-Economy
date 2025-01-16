@@ -31,7 +31,7 @@ The mod provides a set of commands to manage the economy:
 
 1. **/balance** - View your current balance.
 2. **/pay <player> <amount>** - Transfer money to another player.
-3. **/dailyreward** - Claim your daily reward.
+3. **/daily_reward** - Claim your daily reward.
 4. **/rs:economy set <player> <amount>** - Set a player's balance (Admin only).
 5. **/rs:economy add <player> <amount>** - Add money to a player's balance (Admin only).
 6. **/rs:economy remove <player> <amount>** - Remove money from a player's balance (Admin only).
