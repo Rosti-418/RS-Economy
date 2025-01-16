@@ -10,7 +10,7 @@ This Minecraft mod introduces a robust economy system, including player balances
 - 🎁 **Daily Rewards:** Players can claim configurable daily rewards.
 - 🛠 **Admin Tools:** Commands for managing balances, rewards, and server-wide settings.
 - 🌍 **Localization Support:** Multi-language support to enhance accessibility.
-- 🔗 **Server Integration:** Seamlessly integrates with Minecraft servers.
+- 🔗 **Server Integration:** Seamlessly integrates with Minecraft servers, primarily designed for server-side functionality. However, it can also be used on the client side.
 
 ---
 
