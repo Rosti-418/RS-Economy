@@ -8,6 +8,11 @@ plugins {
 version = mod_version
 group = mod_group_id
 
+ext.finalMcVersion = project.hasProperty('minecraft_version') ? project.getProperty('minecraft_version') : minecraft_version
+ext.finalNeoVersion = project.hasProperty('neo_version') ? project.getProperty('neo_version') : neo_version
+ext.finalParchmentMappingsVersion = project.hasProperty('parchment_mappings_version') ? project.getProperty('parchment_mappings_version') : parchment_mappings_version
+ext.finalParchmentMinecraftVersion = project.hasProperty('parchment_minecraft_version') ? project.getProperty('parchment_minecraft_version') : parchment_minecraft_version
+
 repositories {
     mavenLocal()
 }
@@ -20,11 +25,11 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 neoForge {
     // Specify the version of NeoForge to use.
-    version = project.neo_version
+    version = finalNeoVersion
 
     parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
+        mappingsVersion = finalParchmentMappingsVersion
+        minecraftVersion = finalParchmentMinecraftVersion
     }
 
     // This line is optional. Access Transformers are automatically detected
@@ -121,9 +126,9 @@ dependencies {
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
-    var replaceProperties = [minecraft_version      : minecraft_version,
+    var replaceProperties = [minecraft_version      : finalMcVersion,
                              minecraft_version_range: minecraft_version_range,
-                             neo_version            : neo_version,
+                             neo_version            : finalNeoVersion,
                              neo_version_range      : neo_version_range,
                              loader_version_range   : loader_version_range,
                              mod_id                 : mod_id,
@@ -164,4 +169,8 @@ idea {
         downloadSources = true
         downloadJavadoc = true
     }
+}
+
+jar {
+    archiveFileName = "${project.name}-${finalMcVersion}-${project.version}.jar"
 }
