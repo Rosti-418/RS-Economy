@@ -4,9 +4,7 @@
  * For more information, see the LICENSE file in the project root
  * or contact us via Discord: https://dsc.gg/rosti-studios
  */
-
 package org.rseconomy.rs_economy;
-
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -16,21 +14,21 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-
 import java.util.Locale;
-
 public class CommandManager {
     private final BalanceManager balanceManager;
     private final RewardManager rewardManager;
-
-    public CommandManager(UserDataManager userDataManager, BalanceManager balanceManager, RewardManager rewardManager) {
+    public CommandManager(BalanceManager balanceManager, RewardManager rewardManager) {
         this.balanceManager = balanceManager;
         this.rewardManager = rewardManager;
     }
-
     /**
-     * Registers all commands used by the economy system.
-     * Commands include balance checks, payments, rewards, and admin actions.
+
+
+     Registers all commands used by the economy system.
+
+
+     Commands include balance checks, payments, rewards, and admin actions.
      */
     public void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal(Localization.get("command.pay"))
@@ -42,7 +40,6 @@ public class CommandManager {
                                     double amount = DoubleArgumentType.getDouble(context, Localization.get("sugg.amount"));
                                     return handlePay(sender, receiver, amount);
                                 }))));
-
         dispatcher.register(Commands.literal(Localization.get("command.balance"))
                 .executes(context -> {
                     ServerPlayer player = context.getSource().getPlayerOrException();
@@ -59,13 +56,11 @@ public class CommandManager {
                             admin.sendSystemMessage(Component.literal(Localization.get("balance.admin.info", target.getName().getString(), targetBalance, BalanceManager.CURRENCY)));
                             return 1;
                         })));
-
         dispatcher.register(Commands.literal(Localization.get("command.dailyreward"))
                 .executes(context -> {
                     ServerPlayer player = context.getSource().getPlayerOrException();
                     return rewardManager.claimDailyReward(player);
                 }));
-
         dispatcher.register(Commands.literal(Localization.get("command.rseco"))
                 .requires(source -> source.hasPermission(2))
                 .then(Commands.literal(Localization.get("sugg.set"))
@@ -112,25 +107,24 @@ public class CommandManager {
                                 })))
                 .then(Commands.literal(Localization.get("sugg.dailyreward.set"))
                         .then(Commands.argument(Localization.get("sugg.dailyreward.min"), IntegerArgumentType.integer())
-                            .then(Commands.argument(Localization.get("sugg.dailyreward.max"), IntegerArgumentType.integer())
-                                    .executes(context -> {
-                                        ModConfigs.DAILY_REWARD_MIN.set(
-                                                IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.min"))
-                                        );
-
-                                        ModConfigs.DAILY_REWARD_MAX.set(
-                                                IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.max"))
-                                        );
-                                        context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.dailyreward", IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.min")), IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.max")))), true);
-                                        return 1;
-                                    }))))
+                                .then(Commands.argument(Localization.get("sugg.dailyreward.max"), IntegerArgumentType.integer())
+                                        .executes(context -> {
+                                            ModConfigs.DAILY_REWARD_MIN.set(
+                                                    IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.min"))
+                                            );
+                                            ModConfigs.DAILY_REWARD_MAX.set(
+                                                    IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.max"))
+                                            );
+                                            context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.dailyreward", IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.min")), IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.max")))), true);
+                                            return 1;
+                                        }))))
                 .then(Commands.literal(Localization.get("sugg.language"))
                         .then(Commands.argument(Localization.get("sugg.language.locale"), StringArgumentType.string())
                                 .executes(context -> {
                                     String localeArgument = StringArgumentType.getString(context, Localization.get("sugg.language.locale"));
                                     localeArgument = localeArgument.replace('_', '-');
                                     Locale newLocale = Locale.forLanguageTag(localeArgument);
-                                    //ServerDataManager.LOGGER.debug("Locale: " + newLocale.toString());
+//ServerDataManager.LOGGER.debug("Locale: " + newLocale.toString());
                                     context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.language", Localization.setLocale(newLocale))), true);
                                     return 1;
                                 })))
@@ -141,6 +135,7 @@ public class CommandManager {
                             return 1;
                         })));
     }
+
 
     private int handlePay(ServerPlayer sender, ServerPlayer receiver, double amount) {
         if (amount <= 0) {

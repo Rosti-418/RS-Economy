@@ -4,33 +4,37 @@
  * For more information, see the LICENSE file in the project root
  * or contact us via Discord: https://dsc.gg/rosti-studios
  */
-
 package org.rseconomy.rs_economy;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-
 public class RewardManager {
     private final BalanceManager balanceManager;
     private final Map<UUID, LocalDate> lastClaimedRewards = new HashMap<>();
     private final Random random = new Random();
-
-    public RewardManager(BalanceManager balanceManager) {
+    private final EconomyData economyData;
+    public RewardManager(BalanceManager balanceManager, EconomyData economyData) {
         this.balanceManager = balanceManager;
+        this.economyData = economyData;
     }
-
     /**
-     * Allows players to claim their daily rewards.
-     * Rewards are only claimable once per day per player.
-     *
-     * @param player The player claiming the reward.
-     * @return 1 if reward is successfully claimed, 0 otherwise.
+
+
+     Allows players to claim their daily rewards.
+
+
+     Rewards are only claimable once per day per player.
+
+
+
+     @param player The player claiming the reward.
+
+
+     @return 1 if reward is successfully claimed, 0 otherwise.
      */
     public int claimDailyReward(ServerPlayer player) {
         UUID playerId = player.getUUID();
@@ -39,8 +43,9 @@ public class RewardManager {
             player.sendSystemMessage(Component.literal(Localization.get("reward.daily.alreadyclaimed")));
             return 0;
         }
-
         lastClaimedRewards.put(playerId, today);
+        economyData.setDailyReward(playerId, today);
+        economyData.setDirty();
         int rewardRange[] = {ModConfigs.DAILY_REWARD_MIN.get(), ModConfigs.DAILY_REWARD_MAX.get()};
         double rewardAmount =  random.nextInt(rewardRange[0], rewardRange[1] + 1);
         balanceManager.addBalance(playerId, rewardAmount);
@@ -48,10 +53,10 @@ public class RewardManager {
         return 1;
     }
 
+
     public Map<UUID, LocalDate> getLastClaimedRewards() {
         return new HashMap<>(lastClaimedRewards);
     }
-
     public void loadDailyRewards(Map<UUID, LocalDate> rewards) {
         lastClaimedRewards.putAll(rewards);
     }

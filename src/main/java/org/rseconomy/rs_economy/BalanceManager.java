@@ -4,87 +4,56 @@
  * For more information, see the LICENSE file in the project root
  * or contact us via Discord: https://dsc.gg/rosti-studios
  */
-
 package org.rseconomy.rs_economy;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
 public class BalanceManager {
     public static String CURRENCY;
-    private static final Map<UUID, Map<String, Double>> playerBalances = new HashMap<>();
-
+    private static final Map<UUID, Double> playerBalances = new HashMap<>();
+    private final EconomyData economyData;
+    public BalanceManager(EconomyData economyData) {
+        this.economyData = economyData;
+    }
     /**
-     * Loads and updates player balances based on the current currency.
-     * Ensures balances are migrated if the currency changes.
+
+     Loads the current currency name.
      */
     public static void loadBalance() {
-
-        String newCurrency = ModConfigs.CURRENCY.get();
-
-        if (CURRENCY != null && !CURRENCY.equals(newCurrency)) {
-            for (Map.Entry<UUID, Map<String, Double>> entry : playerBalances.entrySet()) {
-                UUID playerId = entry.getKey();
-                Map<String, Double> balances = entry.getValue();
-
-                double oldAmount = balances.getOrDefault(CURRENCY, 0.0);
-                double newAmount = balances.getOrDefault(newCurrency, 0.0);
-
-                balances.put(newCurrency, oldAmount + newAmount);
-                balances.remove(CURRENCY);
-            }
-        }
-        CURRENCY = newCurrency;
+        CURRENCY = ModConfigs.CURRENCY.get();
     }
 
     public double getBalance(UUID playerId) {
-        return playerBalances.getOrDefault(playerId, new HashMap<>()).getOrDefault(CURRENCY, 0.0);
+        return playerBalances.getOrDefault(playerId, 0.0);
     }
-
     public void setBalance(UUID playerId, double amount) {
-        mergeOldCurrencyBalance(playerId);
-        playerBalances.computeIfAbsent(playerId, k -> new HashMap<>()).put(CURRENCY, amount);
+        playerBalances.put(playerId, amount);
+        economyData.setBalance(playerId, amount);
+        economyData.setDirty();
     }
-
     public void addBalance(UUID playerId, double amount) {
-        mergeOldCurrencyBalance(playerId);
-        Map<String, Double> balances = playerBalances.computeIfAbsent(playerId, k -> new HashMap<>());
-        balances.put(CURRENCY, balances.getOrDefault(CURRENCY, 0.0) + amount);
+        double currentBalance = getBalance(playerId);
+        double newAmount = currentBalance + amount;
+        playerBalances.put(playerId, newAmount);
+        economyData.setBalance(playerId, newAmount);
+        economyData.setDirty();
     }
-
     public boolean subtractBalance(UUID playerId, double amount) {
-        mergeOldCurrencyBalance(playerId);
-        Map<String, Double> balances = playerBalances.computeIfAbsent(playerId, k -> new HashMap<>());
-        double currentBalance = balances.getOrDefault(CURRENCY, 0.0);
+        double currentBalance = getBalance(playerId);
         if (currentBalance < amount) {
-            // Insufficient funds; balance cannot be subtracted.
+// Insufficient funds; balance cannot be subtracted.
             return false;
         }
-        balances.put(CURRENCY, currentBalance - amount);
+        double newAmount = currentBalance - amount;
+        playerBalances.put(playerId, newAmount);
+        economyData.setBalance(playerId, newAmount);
+        economyData.setDirty();
         return true;
     }
-
-    public Map<UUID, Map<String, Double>> getBalances() {
+    public Map<UUID, Double> getBalances() {
         return new HashMap<>(playerBalances);
     }
-
-    public void loadBalances(Map<UUID, Map<String, Double>> balances) {
+    public void loadBalances(Map<UUID, Double> balances) {
         playerBalances.putAll(balances);
-    }
-
-    private void mergeOldCurrencyBalance(UUID playerId) {
-        Map<String, Double> balances = playerBalances.computeIfAbsent(playerId, k -> new HashMap<>());
-
-        if (!balances.containsKey(CURRENCY)) {
-            for (Map.Entry<String, Double> entry : balances.entrySet()) {
-                String currency = entry.getKey();
-                double amount = entry.getValue();
-
-                balances.put(CURRENCY, balances.getOrDefault(CURRENCY, 0.0) + amount);
-                balances.remove(currency);
-                break;
-            }
-        }
     }
 }
