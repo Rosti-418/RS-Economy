@@ -21,7 +21,7 @@ public class BalanceManager {
      */
     public static void loadBalance() {
 
-        String newCurrency = ServerDataManager.getCurrency();
+        String newCurrency = ModConfigs.CURRENCY.get();
 
         if (CURRENCY != null && !CURRENCY.equals(newCurrency)) {
             for (Map.Entry<UUID, Map<String, Double>> entry : playerBalances.entrySet()) {

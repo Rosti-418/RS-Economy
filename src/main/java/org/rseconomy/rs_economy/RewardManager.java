@@ -41,7 +41,7 @@ public class RewardManager {
         }
 
         lastClaimedRewards.put(playerId, today);
-        int rewardRange[] = ServerDataManager.getDailyReward();
+        int rewardRange[] = {ModConfigs.DAILY_REWARD_MIN.get(), ModConfigs.DAILY_REWARD_MAX.get()};
         double rewardAmount =  random.nextInt(rewardRange[0], rewardRange[1] + 1);
         balanceManager.addBalance(playerId, rewardAmount);
         player.sendSystemMessage(Component.literal(Localization.get("reward.daily.redeem", rewardAmount, BalanceManager.CURRENCY)));

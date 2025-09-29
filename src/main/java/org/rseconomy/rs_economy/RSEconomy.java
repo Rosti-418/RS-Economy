@@ -20,6 +20,8 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.ModLoadingContext;
 
 @Mod(RSEconomy.MOD_ID)
 public class RSEconomy {
@@ -37,6 +39,7 @@ public class RSEconomy {
         instance = this;
         modEventBus.addListener(this::commonSetup);
         NeoForge.EVENT_BUS.register(this);
+        modContainer.registerConfig(ModConfig.Type.COMMON, ModConfigs.COMMON_CONFIG);
     }
 
     public static RSEconomy getInstance() {
@@ -45,7 +48,6 @@ public class RSEconomy {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         userDataManager.loadUserData(balanceManager, rewardManager);
-        ServerDataManager.loadServerData();
     }
 
     @SubscribeEvent
@@ -58,14 +60,12 @@ public class RSEconomy {
     @SubscribeEvent
     public void onServerStopping(ServerStoppingEvent event) {
         userDataManager.saveUserData(balanceManager.getBalances(), rewardManager.getLastClaimedRewards());
-        ServerDataManager.saveServerData();
+        ModConfigs.COMMON_CONFIG.save();
     }
 
     public void reload() {
         userDataManager.saveUserData(balanceManager.getBalances(), rewardManager.getLastClaimedRewards());
-        ServerDataManager.saveServerData();
         userDataManager.loadUserData(balanceManager, rewardManager);
-        ServerDataManager.loadServerData();
         balanceManager.loadBalance();
     }
 }

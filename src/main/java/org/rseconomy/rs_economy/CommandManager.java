@@ -105,7 +105,7 @@ public class CommandManager {
                         .then(Commands.argument(Localization.get("sugg.currencyname"), StringArgumentType.string())
                                 .executes(context -> {
                                     String newCurrencyName = StringArgumentType.getString(context, Localization.get("sugg.currencyname"));
-                                    ServerDataManager.setCurrency(newCurrencyName);
+                                    ModConfigs.CURRENCY.set(newCurrencyName);
                                     balanceManager.loadBalance();
                                     context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.rename", BalanceManager.CURRENCY)), true);
                                     return 1;
@@ -114,7 +114,13 @@ public class CommandManager {
                         .then(Commands.argument(Localization.get("sugg.dailyreward.min"), IntegerArgumentType.integer())
                             .then(Commands.argument(Localization.get("sugg.dailyreward.max"), IntegerArgumentType.integer())
                                     .executes(context -> {
-                                        ServerDataManager.setDailyReward(IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.min")), IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.max")));
+                                        ModConfigs.DAILY_REWARD_MIN.set(
+                                                IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.min"))
+                                        );
+
+                                        ModConfigs.DAILY_REWARD_MAX.set(
+                                                IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.max"))
+                                        );
                                         context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.dailyreward", IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.min")), IntegerArgumentType.getInteger(context, Localization.get("sugg.dailyreward.max")))), true);
                                         return 1;
                                     }))))

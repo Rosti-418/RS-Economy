@@ -1,9 +1,6 @@
 package org.rseconomy.rs_economy;
 
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
-
-import java.nio.file.Path;
 
 public class ModConfigs {
     public static final ModConfigSpec COMMON_CONFIG;
@@ -27,25 +24,14 @@ public class ModConfigs {
 
         DAILY_REWARD_MIN = builder
                 .comment("Minimum daily reward amount")
-                .define("daily.reward.min", 100, i -> i instanceof Integer);
+                .define("daily.reward.min", 100, i -> i instanceof Integer && (Integer) i >= 0);
 
         DAILY_REWARD_MAX = builder
                 .comment("Maximum daily reward amount")
-                .define("daily.reward.max", 500, i -> i instanceof Integer);
+                .define("daily.reward.max", 500, i -> i instanceof Integer && (Integer) i >= 0);
 
         builder.pop();
 
         COMMON_CONFIG = builder.build();
-    }
-
-    public static void loadConfig(ModConfigSpec spec, Path path) {
-        final CommentedFileConfig configData = CommentedFileConfig.builder(path)
-                .sync()
-                .autosave()
-                .writingMode(com.electronwill.nightconfig.core.file.WritingMode.REPLACE)
-                .build();
-
-        configData.load();
-        spec.setConfig(configData);
     }
 }

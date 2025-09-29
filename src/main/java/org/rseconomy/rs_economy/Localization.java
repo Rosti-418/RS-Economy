@@ -9,6 +9,7 @@ package org.rseconomy.rs_economy;
 
 import java.text.MessageFormat;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Localization {
@@ -24,7 +25,7 @@ public class Localization {
      * Is called with a fallback language when the application is started. And again as soon as the server data has been loaded.
      */
     public static void init() {
-        messages = getResourceBundle(ServerDataManager.getLocale());
+        messages = getResourceBundle(Locale.of(ModConfigs.LOCALE.get()));
         //ServerDataManager.LOGGER.debug("Set current locale to: " + messages.getLocale());
     }
 
@@ -32,7 +33,7 @@ public class Localization {
         try {
             //ServerDataManager.LOGGER.error("Locale: " + locale.toString());
             messages = getResourceBundle(locale);
-            ServerDataManager.setLocale(locale);
+            ModConfigs.LOCALE.set(String.valueOf(locale));
             return messages.getLocale().getDisplayLanguage();
         } catch (Exception e) {
             return null;
@@ -57,11 +58,20 @@ public class Localization {
     }
 
     private static ResourceBundle getResourceBundle(Locale locale) {
-        ResourceBundle rb = ResourceBundle.getBundle("locale", locale);
-        // If the language is not supported, the default language is used
-        if(!rb.getLocale().getDisplayLanguage().equals(locale.getDisplayLanguage())){
-            rb = ResourceBundle.getBundle("locale", Locale.of("en", "US"));
+        ResourceBundle rb;
+
+        try {
+            rb = ResourceBundle.getBundle("locale", locale);
+        } catch (MissingResourceException e) {
+            // Wenn die Sprache nicht unterstützt wird, Standard auf Englisch (US)
+            rb = ResourceBundle.getBundle("locale", new Locale("en", "US"));
         }
+
+        // Prüfen, ob die gewünschte Sprache wirklich geladen wurde
+        if (!rb.getLocale().getLanguage().equals(locale.getLanguage())) {
+            rb = ResourceBundle.getBundle("locale", new Locale("en", "US"));
+        }
+
         return rb;
     }
 }
