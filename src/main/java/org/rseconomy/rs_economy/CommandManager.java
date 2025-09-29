@@ -128,6 +128,7 @@ public class CommandManager {
                         .then(Commands.argument(Localization.get("sugg.language.locale"), StringArgumentType.string())
                                 .executes(context -> {
                                     String localeArgument = StringArgumentType.getString(context, Localization.get("sugg.language.locale"));
+                                    localeArgument = localeArgument.replace('_', '-');
                                     Locale newLocale = Locale.forLanguageTag(localeArgument);
                                     //ServerDataManager.LOGGER.debug("Locale: " + newLocale.toString());
                                     context.getSource().sendSuccess(() -> Component.literal(Localization.get("admin.language", Localization.setLocale(newLocale))), true);
