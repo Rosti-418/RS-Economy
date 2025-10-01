@@ -5,66 +5,76 @@
  * or contact us via Discord: https://dsc.gg/rosti-studios
  */
 package org.rseconomy.rs_economy;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+/**
+ * Handles localization for the RSEconomy mod, providing translated messages.
+ */
 public class Localization {
     private static ResourceBundle messages;
+
     static {
-// Initialize the ResourceBundle with the default value
         init();
     }
-    /**
 
-     Initializes the ResourceBundle with the current language of the ServerDataManager.
-     Is called with a fallback language when the application is started. And again as soon as the server data has been loaded.
+    /**
+     * Initializes the ResourceBundle with the configured locale.
      */
     public static void init() {
         messages = getResourceBundle(Locale.of(ModConfigs.LOCALE.get()));
-//ServerDataManager.LOGGER.debug("Set current locale to: " + messages.getLocale());
     }
 
+    /**
+     * Sets the locale for localization and updates the configuration.
+     *
+     * @param locale The new locale to set.
+     * @return The display name of the new locale, or null if the locale is invalid.
+     */
     public static String setLocale(Locale locale) {
         try {
-//ServerDataManager.LOGGER.error("Locale: " + locale.toString());
             messages = getResourceBundle(locale);
-            ModConfigs.LOCALE.set(String.valueOf(locale));
+            ModConfigs.LOCALE.set(locale.toString());
             return messages.getLocale().getDisplayLanguage();
         } catch (Exception e) {
             return null;
         }
     }
+
     /**
-
-     Retrieves a localized message based on the given key and parameters.
-     Falls back to '???key???' if the key is not found.
-
-     @param key    The localization key.
-     @param params Parameters for formatting the message.
-     @return Localized and formatted string.
+     * Retrieves a localized message for the given key, formatted with parameters.
+     *
+     * @param key    The localization key.
+     * @param params Parameters for formatting the message.
+     * @return The localized and formatted string, or null if the key is not found.
      */
     public static String get(String key, Object... params) {
         try {
             String message = messages.getString(key);
             return MessageFormat.format(message, params);
         } catch (Exception e) {
-            return null; //Fallback for missing keys
+            return null;
         }
     }
 
+    /**
+     * Loads a ResourceBundle for the specified locale, falling back to en_US if unavailable.
+     *
+     * @param locale The desired locale.
+     * @return The loaded ResourceBundle.
+     */
     private static ResourceBundle getResourceBundle(Locale locale) {
-        ResourceBundle rb;
         try {
-            rb = ResourceBundle.getBundle("locale", locale);
+            ResourceBundle rb = ResourceBundle.getBundle("locale", locale);
+            if (!rb.getLocale().getLanguage().equals(locale.getLanguage())) {
+                rb = ResourceBundle.getBundle("locale", new Locale("en", "US"));
+            }
+            return rb;
         } catch (MissingResourceException e) {
-// Wenn die Sprache nicht unterstützt wird, Standard auf Englisch (US)
-            rb = ResourceBundle.getBundle("locale", new Locale("en", "US"));
+            return ResourceBundle.getBundle("locale", new Locale("en", "US"));
         }
-// Prüfen, ob die gewünschte Sprache wirklich geladen wurde
-        if (!rb.getLocale().getLanguage().equals(locale.getLanguage())) {
-            rb = ResourceBundle.getBundle("locale", new Locale("en", "US"));
-        }
-        return rb;
     }
 }
