@@ -32,6 +32,7 @@ public class RSEconomy {
     private BalanceManager balanceManager;
     private RewardManager rewardManager;
     private CommandManager commandManager;
+    private LeaderboardManager leaderboardManager;
 
     /**
      * Constructs the RSEconomy mod instance and registers event listeners.
@@ -64,6 +65,10 @@ public class RSEconomy {
         return balanceManager;
     }
 
+    public LeaderboardManager getLeaderboardManager() {
+        return leaderboardManager;
+    }
+
     /**
      * Performs common setup tasks during mod initialization.
      *
@@ -85,7 +90,8 @@ public class RSEconomy {
         EconomyData econ = EconomyData.get(level);
         balanceManager = new BalanceManager(econ);
         rewardManager = new RewardManager(balanceManager, econ);
-        commandManager = new CommandManager(balanceManager, rewardManager);
+        leaderboardManager = new LeaderboardManager(balanceManager);
+        commandManager = new CommandManager(balanceManager, rewardManager, leaderboardManager);  // Passe den Konstruktor an
         balanceManager.loadBalances(econ.getBalances());
         rewardManager.loadDailyRewards(econ.getDailyRewards());
         balanceManager.loadBalance();

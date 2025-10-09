@@ -24,6 +24,7 @@ import java.util.Locale;
 public class CommandManager {
     private final BalanceManager balanceManager;
     private final RewardManager rewardManager;
+    private final LeaderboardManager leaderboardManager;
 
     /**
      * Constructs a CommandManager with the specified balance and reward managers.
@@ -31,9 +32,10 @@ public class CommandManager {
      * @param balanceManager The balance manager instance.
      * @param rewardManager  The reward manager instance.
      */
-    public CommandManager(BalanceManager balanceManager, RewardManager rewardManager) {
+    public CommandManager(BalanceManager balanceManager, RewardManager rewardManager, LeaderboardManager leaderboardManager) {
         this.balanceManager = balanceManager;
         this.rewardManager = rewardManager;
+        this.leaderboardManager = leaderboardManager;
     }
 
     /**
@@ -81,6 +83,20 @@ public class CommandManager {
                     ServerPlayer player = context.getSource().getPlayerOrException();
                     return rewardManager.claimDailyReward(player);
                 }));
+
+        dispatcher.register(Commands.literal(Localization.get("command.top"))
+                .executes(context -> {
+                    ServerPlayer player = context.getSource().getPlayerOrException();
+                    leaderboardManager.displayLeaderboard(player, 1);
+                    return 1;
+                })
+                .then(Commands.argument(Localization.get("sugg.page"), IntegerArgumentType.integer(1))
+                        .executes(context -> {
+                            ServerPlayer player = context.getSource().getPlayerOrException();
+                            int page = IntegerArgumentType.getInteger(context, Localization.get("sugg.page"));
+                            leaderboardManager.displayLeaderboard(player, page);
+                            return 1;
+                        })));
 
         // Admin commands under /rseco
         dispatcher.register(Commands.literal(Localization.get("command.rseco"))
