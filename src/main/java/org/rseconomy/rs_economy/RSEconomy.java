@@ -94,7 +94,7 @@ public class RSEconomy {
         commandManager = new CommandManager(balanceManager, rewardManager, leaderboardManager);  // Passe den Konstruktor an
         balanceManager.loadBalances(econ.getBalances());
         rewardManager.loadDailyRewards(econ.getDailyRewards());
-        balanceManager.loadBalance();
+        BalanceManager.loadBalance();
         commandManager.registerCommands(dispatcher);
     }
 
@@ -113,6 +113,6 @@ public class RSEconomy {
      */
     public void reload() {
         Localization.init();
-        balanceManager.loadBalance();
+        BalanceManager.loadBalance();
     }
 }

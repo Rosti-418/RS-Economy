@@ -84,19 +84,22 @@ public class CommandManager {
                     return rewardManager.claimDailyReward(player);
                 }));
 
+        // Leaderboard command: View the top balances
         dispatcher.register(Commands.literal(Localization.get("command.top"))
-                .executes(context -> {
-                    ServerPlayer player = context.getSource().getPlayerOrException();
-                    leaderboardManager.displayLeaderboard(player, 1);
+                .then(Commands.argument(Localization.get("sugg.page"), IntegerArgumentType.integer(1))
+                        .executes(ctx -> {
+                            int page = IntegerArgumentType.getInteger(ctx, Localization.get("sugg.page"));
+                            ServerPlayer player = ctx.getSource().getPlayerOrException();
+                            leaderboardManager.openLeaderboard(player, page);
+                            return 1;
+                        })
+                )
+                .executes(ctx -> {
+                    ServerPlayer player = ctx.getSource().getPlayerOrException();
+                    leaderboardManager.openLeaderboard(player, 1);
                     return 1;
                 })
-                .then(Commands.argument(Localization.get("sugg.page"), IntegerArgumentType.integer(1))
-                        .executes(context -> {
-                            ServerPlayer player = context.getSource().getPlayerOrException();
-                            int page = IntegerArgumentType.getInteger(context, Localization.get("sugg.page"));
-                            leaderboardManager.displayLeaderboard(player, page);
-                            return 1;
-                        })));
+        );
 
         // Admin commands under /rseco
         dispatcher.register(Commands.literal(Localization.get("command.rseco"))
