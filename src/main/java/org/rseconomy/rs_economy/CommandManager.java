@@ -205,6 +205,12 @@ public class CommandManager {
                                 })))
                 .then(Commands.literal(Localization.get("sugg.language"))
                         .then(Commands.argument(Localization.get("sugg.language.locale"), StringArgumentType.string())
+                                .suggests((context, builder) -> {
+                                    builder.suggest("en-US");
+                                    builder.suggest("de-DE");
+                                    return builder.buildFuture();
+                                }
+                                )
                                 .executes(context -> {
                                     String localeArg = StringArgumentType.getString(context, Localization.get("sugg.language.locale"))
                                             .replace('_', '-');
