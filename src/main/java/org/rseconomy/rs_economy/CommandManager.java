@@ -85,7 +85,7 @@ public class CommandManager {
                 }));
 
         // Leaderboard command: View the top balances
-        dispatcher.register(Commands.literal(Localization.get("command.top"))
+        dispatcher.register(Commands.literal(Localization.get("command.leaderboard"))
                 .then(Commands.argument(Localization.get("sugg.page"), IntegerArgumentType.integer(1))
                         .executes(ctx -> {
                             int page = IntegerArgumentType.getInteger(ctx, Localization.get("sugg.page"));
@@ -95,6 +95,10 @@ public class CommandManager {
                         })
                 )
                 .executes(ctx -> {
+                    if (!ModConfigs.LEADERBOARD_STATUS.get() && !ctx.getSource().hasPermission(2)) {
+                        ctx.getSource().sendFailure(Component.literal(Localization.get("leaderboard.disabled")));
+                        return 0;
+                    }
                     ServerPlayer player = ctx.getSource().getPlayerOrException();
                     leaderboardManager.openLeaderboard(player, 1);
                     return 1;
@@ -171,6 +175,34 @@ public class CommandManager {
                                                     Component.literal(Localization.get("admin.dailyreward", min, max)), true);
                                             return 1;
                                         }))))
+                .then(Commands.literal(Localization.get("sugg.leaderboard"))
+                        .then(Commands.argument(Localization.get("sugg.status"), StringArgumentType.string())
+                                .suggests((context, builder) -> {
+                                    builder.suggest(Localization.get("sugg.enable"));
+                                    builder.suggest(Localization.get("sugg.disable"));
+                                    return builder.buildFuture();
+                                })
+                                .executes(context -> {
+                                    String statusArg = StringArgumentType.getString(context, Localization.get("sugg.status"))
+                                            .toLowerCase(Locale.ROOT);
+                                    boolean enabled;
+                                    if (statusArg.equals(Localization.get("sugg.enable"))) {
+                                        enabled = true;
+                                    } else if (statusArg.equals(Localization.get("sugg.disable"))) {
+                                        enabled = false;
+                                    } else {
+                                        context.getSource().sendFailure(Component.literal(
+                                                Localization.get("admin.leaderboard.invalid")));
+                                        return 0;
+                                    }
+                                    ModConfigs.LEADERBOARD_STATUS.set(enabled);
+                                    String statusText = enabled ?
+                                            Localization.get("admin.leaderboard.enabled") :
+                                            Localization.get("admin.leaderboard.disabled");
+                                    context.getSource().sendSuccess(() ->
+                                            Component.literal(statusText), true);
+                                    return 1;
+                                })))
                 .then(Commands.literal(Localization.get("sugg.language"))
                         .then(Commands.argument(Localization.get("sugg.language.locale"), StringArgumentType.string())
                                 .executes(context -> {

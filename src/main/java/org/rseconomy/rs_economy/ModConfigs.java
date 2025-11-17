@@ -14,6 +14,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class ModConfigs {
     public static final ModConfigSpec COMMON_CONFIG;
     public static final ModConfigSpec.ConfigValue<String> CURRENCY;
+    public static final ModConfigSpec.ConfigValue<Boolean> LEADERBOARD_STATUS;
     public static final ModConfigSpec.ConfigValue<String> LOCALE;
     public static final ModConfigSpec.ConfigValue<Integer> DAILY_REWARD_MIN;
     public static final ModConfigSpec.ConfigValue<Integer> DAILY_REWARD_MAX;
@@ -25,6 +26,10 @@ public class ModConfigs {
         CURRENCY = builder
                 .comment("The name of the currency used in the economy system")
                 .define("currency", "Coins", s -> s instanceof String && !((String) s).isEmpty());
+
+        LEADERBOARD_STATUS = builder
+                .comment("Enable or disable the in-game leaderboard display")
+                .define("leaderboard.status", true, b -> b instanceof Boolean);
 
         LOCALE = builder
                 .comment("Locale for the mod (e.g., en_US, de_DE)")
