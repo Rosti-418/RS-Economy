@@ -46,27 +46,34 @@ public class EconomyData extends SavedData {
         if (tag.contains("balances")) {
             CompoundTag balancesTag = tag.getCompound("balances");
             for (String uuidStr : balancesTag.getAllKeys()) {
-                UUID uuid = UUID.fromString(uuidStr);
-                Tag playerTag = balancesTag.get(uuidStr);
-                double amount;
-                if (playerTag instanceof CompoundTag compoundTag) {
-                    // Legacy format: sum all currencies
-                    amount = compoundTag.getAllKeys().stream()
-                            .mapToDouble(compoundTag::getDouble)
-                            .sum();
-                } else {
-                    amount = balancesTag.getDouble(uuidStr);
+                try {
+                    UUID uuid = UUID.fromString(uuidStr);
+                    Tag playerTag = balancesTag.get(uuidStr);
+                    double amount;
+                    if (playerTag instanceof CompoundTag compoundTag) {
+                        // Legacy format: sum all currencies
+                        amount = compoundTag.getAllKeys().stream()
+                                .mapToDouble(compoundTag::getDouble)
+                                .sum();
+                    } else {
+                        amount = balancesTag.getDouble(uuidStr);
+                    }
+                    data.balances.put(uuid, amount);
+                } catch (IllegalArgumentException e) {
+                    // Skip invalid UUID entries
                 }
-                data.balances.put(uuid, amount);
             }
         }
         if (tag.contains("dailyRewards")) {
             CompoundTag rewardsTag = tag.getCompound("dailyRewards");
             for (String uuidStr : rewardsTag.getAllKeys()) {
-                data.dailyRewards.put(
-                        UUID.fromString(uuidStr),
-                        LocalDate.parse(rewardsTag.getString(uuidStr))
-                );
+                try {
+                    UUID uuid = UUID.fromString(uuidStr);
+                    LocalDate date = LocalDate.parse(rewardsTag.getString(uuidStr));
+                    data.dailyRewards.put(uuid, date);
+                } catch (IllegalArgumentException e) {
+                    // Skip invalid UUID or date entries
+                }
             }
         }
         return data;

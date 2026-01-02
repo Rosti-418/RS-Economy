@@ -153,7 +153,7 @@ public class CommandManager {
                                 .executes(context -> {
                                     String newCurrencyName = StringArgumentType.getString(context, Localization.get("sugg.currencyname"));
                                     ModConfigs.CURRENCY.set(newCurrencyName);
-                                    balanceManager.loadBalance();
+                                    BalanceManager.loadBalance();
                                     context.getSource().sendSuccess(() ->
                                             Component.literal(Localization.get("admin.rename", BalanceManager.CURRENCY)), true);
                                     return 1;

@@ -10,7 +10,6 @@ package org.rseconomy.rs_economy;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.neoforge.common.ModConfigSpec;
 
 /**
  * Handles configuration loading for the RSEconomy mod.

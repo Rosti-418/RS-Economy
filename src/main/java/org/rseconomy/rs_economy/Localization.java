@@ -35,6 +35,9 @@ public class Localization {
      * @return The display name of the new locale, or null if the locale is invalid.
      */
     public static String setLocale(Locale locale) {
+        if (locale == null) {
+            return null;
+        }
         try {
             messages = getResourceBundle(locale);
             ModConfigs.LOCALE.set(locale.toString());
@@ -49,14 +52,17 @@ public class Localization {
      *
      * @param key    The localization key.
      * @param params Parameters for formatting the message.
-     * @return The localized and formatted string, or null if the key is not found.
+     * @return The localized and formatted string, or the key itself if not found.
      */
     public static String get(String key, Object... params) {
         try {
+            if (messages == null) {
+                init();
+            }
             String message = messages.getString(key);
             return MessageFormat.format(message, params);
         } catch (Exception e) {
-            return null;
+            return key; // Return the key instead of null for better debugging
         }
     }
 
@@ -70,11 +76,11 @@ public class Localization {
         try {
             ResourceBundle rb = ResourceBundle.getBundle("locale", locale);
             if (!rb.getLocale().getLanguage().equals(locale.getLanguage())) {
-                rb = ResourceBundle.getBundle("locale", new Locale("en", "US"));
+                rb = ResourceBundle.getBundle("locale", Locale.of("en", "US"));
             }
             return rb;
         } catch (MissingResourceException e) {
-            return ResourceBundle.getBundle("locale", new Locale("en", "US"));
+            return ResourceBundle.getBundle("locale", Locale.of("en", "US"));
         }
     }
 }

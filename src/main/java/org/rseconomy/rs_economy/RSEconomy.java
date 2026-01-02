@@ -18,16 +18,12 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
-import org.slf4j.Logger;
-import com.mojang.logging.LogUtils;
-
 /**
  * Main class for the RSEconomy mod, initializing core components and event handlers.
  */
 @Mod(RSEconomy.MOD_ID)
 public class RSEconomy {
     public static final String MOD_ID = "rs_economy";
-    private static final Logger LOGGER = LogUtils.getLogger();
     private static RSEconomy instance;
     private BalanceManager balanceManager;
     private RewardManager rewardManager;
@@ -88,10 +84,14 @@ public class RSEconomy {
         CommandDispatcher<CommandSourceStack> dispatcher = event.getServer().getCommands().getDispatcher();
         ServerLevel level = event.getServer().overworld();
         EconomyData econ = EconomyData.get(level);
+        
+        // Attempt to migrate legacy JSON data before loading
+        LegacyJsonMigrator.migrateIfNeeded(event.getServer(), econ);
+        
         balanceManager = new BalanceManager(econ);
         rewardManager = new RewardManager(balanceManager, econ);
         leaderboardManager = new LeaderboardManager(balanceManager);
-        commandManager = new CommandManager(balanceManager, rewardManager, leaderboardManager);  // Passe den Konstruktor an
+        commandManager = new CommandManager(balanceManager, rewardManager, leaderboardManager);
         balanceManager.loadBalances(econ.getBalances());
         rewardManager.loadDailyRewards(econ.getDailyRewards());
         BalanceManager.loadBalance();

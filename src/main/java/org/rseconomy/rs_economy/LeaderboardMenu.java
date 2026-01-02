@@ -8,7 +8,6 @@ package org.rseconomy.rs_economy;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
@@ -46,7 +45,6 @@ public class LeaderboardMenu extends AbstractContainerMenu {
     private final int maxPage;
     private final boolean largeInventory;
     private final int rows;
-    private final MenuType<?> menuType;
 
     /**
      * Displays the leaderboard page to the player.
@@ -65,7 +63,6 @@ public class LeaderboardMenu extends AbstractContainerMenu {
 
         this.largeInventory = this.ranking.size() > 18;
         this.rows = largeInventory ? 6 : 3;
-        this.menuType = largeInventory ? MenuType.GENERIC_9x6 : MenuType.GENERIC_9x3;
 
         this.container = new SimpleContainer(rows * 9);
 
@@ -101,26 +98,29 @@ public class LeaderboardMenu extends AbstractContainerMenu {
 
         // Navigation nur bei großen Inventaren UND mehreren Seiten
         if (largeInventory && maxPage > 1) {
-            container.setItem(page > 1 ? 45 : 45, page > 1 ? createDecoHead(PREV_BASE64, Localization.get("leaderboard.btn.prev")) : ItemStack.EMPTY);
+            container.setItem(45, page > 1 ? createDecoHead(PREV_BASE64, Localization.get("leaderboard.btn.prev")) : ItemStack.EMPTY);
             container.setItem(49, createPageInfoItem());
-            container.setItem(page < maxPage ? 53 : 53, page < maxPage ? createDecoHead(NEXT_BASE64, Localization.get("leaderboard.btn.next")) : ItemStack.EMPTY);
+            container.setItem(53, page < maxPage ? createDecoHead(NEXT_BASE64, Localization.get("leaderboard.btn.next")) : ItemStack.EMPTY);
         }
     }
 
     /**
      * Creates a decorative player head with a custom texture.
      *
-     * @param base64
-     * @param displayName
+     * @param base64      The base64-encoded texture data for the head.
+     * @param displayName The display name for the head item.
      * @return ItemStack representing the decorative head.
      */
     private ItemStack createDecoHead(String base64, String displayName) {
         ItemStack skull = new ItemStack(Items.PLAYER_HEAD);
         GameProfile profile = new GameProfile(UUID.randomUUID(), displayName != null ? displayName : "DecoHead");
-        if (base64 != null && !base64.isEmpty()) profile.getProperties().put("textures", new Property("textures", base64));
+        if (base64 != null && !base64.isEmpty()) {
+            profile.getProperties().put("textures", new Property("textures", base64));
+        }
         skull.set(DataComponents.PROFILE, new ResolvableProfile(profile));
-        if (displayName != null) skull.set(DataComponents.CUSTOM_NAME,
-                Component.literal(displayName));
+        if (displayName != null) {
+            skull.set(DataComponents.CUSTOM_NAME, Component.literal(displayName));
+        }
         return skull;
     }
 
@@ -190,8 +190,11 @@ public class LeaderboardMenu extends AbstractContainerMenu {
     private ItemStack createPlayerSkull(UUID uuid, double balance, int rank) {
         ItemStack skull = new ItemStack(Items.PLAYER_HEAD);
         GameProfile profile = server.getProfileCache().get(uuid).orElse(null);
-        if (profile != null) skull.set(DataComponents.PROFILE, new ResolvableProfile(profile));
-        else skull.set(DataComponents.PROFILE, new ResolvableProfile(new GameProfile(uuid != null ? uuid : UUID.randomUUID(), "Player")));
+        if (profile != null) {
+            skull.set(DataComponents.PROFILE, new ResolvableProfile(profile));
+        } else {
+            skull.set(DataComponents.PROFILE, new ResolvableProfile(new GameProfile(uuid, "Player")));
+        }
 
         String display = (rank > 0 ? rank + ". " : "") + (profile != null ? Localization.get("leaderboard.name", profile.getName()) : "Player");
         skull.set(DataComponents.CUSTOM_NAME, Component.literal(display));
