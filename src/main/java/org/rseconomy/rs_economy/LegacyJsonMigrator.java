@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
@@ -47,9 +48,27 @@ public class LegacyJsonMigrator {
      * @return true if migration was attempted (regardless of success), false if no legacy files were found.
      */
     public static boolean migrateIfNeeded(MinecraftServer server, EconomyData economyData) {
-        File serverDirectory = server.getServerDirectory().toFile();
-        File userDataFile = new File(serverDirectory, USERDATA_FILENAME);
-        File serverDataFile = new File(serverDirectory, SERVERDATA_FILENAME);
+        File serverDirectoryFile;
+        try {
+            // Try newer API (returns Path)
+            Object result = server.getServerDirectory();
+            if (result instanceof Path) {
+                serverDirectoryFile = ((Path) result).toFile();
+            } else {
+                serverDirectoryFile = (File) result;
+            }
+        } catch (NoSuchMethodError e) {
+            // Fallback - assume it's a File
+            try {
+                Object result = server.getServerDirectory();
+                serverDirectoryFile = (File) result;
+            } catch (ClassCastException ex) {
+                // If it's not a File either, skip migration
+                return false;
+            }
+        }
+        File userDataFile = new File(serverDirectoryFile, USERDATA_FILENAME);
+        File serverDataFile = new File(serverDirectoryFile, SERVERDATA_FILENAME);
 
         boolean userDataExists = userDataFile.exists() && userDataFile.isFile();
         boolean serverDataExists = serverDataFile.exists() && serverDataFile.isFile();

@@ -1,0 +1,93 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Client",
+      "presentation": {
+        "group": "Mod Development - RS-Economy",
+        "order": 0
+      },
+      "projectName": "RS-Economy",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\build\\moddev\\clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003drs_economy%%F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Data",
+      "presentation": {
+        "group": "Mod Development - RS-Economy",
+        "order": 1
+      },
+      "projectName": "RS-Economy",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\build\\moddev\\dataRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\build\\moddev\\dataRunVmArgs.txt",
+        "-Dfml.modFolders\u003drs_economy%%F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "GameTestServer",
+      "presentation": {
+        "group": "Mod Development - RS-Economy",
+        "order": 2
+      },
+      "projectName": "RS-Economy",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\build\\moddev\\gameTestServerRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\build\\moddev\\gameTestServerRunVmArgs.txt",
+        "-Dfml.modFolders\u003drs_economy%%F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "Server",
+      "presentation": {
+        "group": "Mod Development - RS-Economy",
+        "order": 3
+      },
+      "projectName": "RS-Economy",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\build\\moddev\\serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003drs_economy%%F:\\Rosti Studios\\Minecraft\\Mods\\RS-Economy\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}

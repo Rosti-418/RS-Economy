@@ -96,6 +96,7 @@ public class RSEconomy {
         rewardManager.loadDailyRewards(econ.getDailyRewards());
         BalanceManager.loadBalance();
         commandManager.registerCommands(dispatcher);
+        TestUtils.generateFakePlayers(balanceManager, 78, 100, 10000); // 35 Spieler mit 100–10.000 Coins
     }
 
     /**

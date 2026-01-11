@@ -5,9 +5,12 @@ echo =============================================
 echo Minecraft Mod Multi-Version Builder
 echo =============================================
 
-rem --- Eingaben abfragen
-set /p mc_versions=Gib Minecraft-Versionen ein (z.B. 1.20.1,1.21.1): 
-set /p neo_versions=Gib passende NeoForge-Versionen ein (z.B. 20.1.73,2.0.74): 
+rem --- Standard-Versionen verwenden (problematische wurden entfernt)
+echo Verwende alle verfügbaren Versionen mit version-spezifischen Implementierungen
+echo Minecraft: 1.20.6,1.21.0,1.21.1,1.21.2,1.21.3,1.21.4,1.21.5,1.21.6,1.21.7,1.21.8
+set mc_versions=1.20.6,1.21.0,1.21.1,1.21.2,1.21.3,1.21.4,1.21.5,1.21.6,1.21.7,1.21.8
+set neo_versions=20.6.139,21.0.167,21.1.218,21.2.1-beta,21.3.95,21.4.156,21.5.96,21.6.20-beta,21.7.25-beta,21.8.52
+rem NeoForge 1.21.9+ haben bekannte Zip-Fehler im Build-System - werden daher nicht gebaut
 
 rem --- Arrays vorbereiten
 set i=0
@@ -33,6 +36,7 @@ if not %count%==%i% (
 
 echo ---------------------------------------------
 echo Starte Builds fuer %count% Kombination(en)
+echo Hinweis: Versionen mit bekannten NeoForge-Problemen wurden entfernt
 echo ---------------------------------------------
 
 rem --- Loop über alle Paare

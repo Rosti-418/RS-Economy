@@ -15,7 +15,7 @@ import net.neoforged.fml.event.config.ModConfigEvent;
  * Handles configuration loading for the RSEconomy mod.
  * Currently, no specific actions are taken on config load.
  */
-@EventBusSubscriber(modid = RSEconomy.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = RSEconomy.MOD_ID)
 public class Config {
 
     /**

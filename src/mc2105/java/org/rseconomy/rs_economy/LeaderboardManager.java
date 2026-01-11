@@ -12,8 +12,8 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.*;
 
 /**
- * Default implementation for leaderboard management.
- * Compatible with most Minecraft versions.
+ * Version-specific implementation for Minecraft 1.21.5+
+ * Uses newer APIs and reflection for private field access.
  */
 public class LeaderboardManager {
     private final BalanceManager balanceManager;
@@ -56,7 +56,7 @@ public class LeaderboardManager {
         LeaderboardMenuProvider.open(player, server, ranking, page);
     }
 
-    // Default server access method
+    // 1.21.5+ compatible server access
     private static MinecraftServer getServer(ServerPlayer player) {
         return player.level().getServer();
     }

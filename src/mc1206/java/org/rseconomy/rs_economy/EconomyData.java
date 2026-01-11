@@ -8,7 +8,6 @@ package org.rseconomy.rs_economy;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
 
@@ -18,8 +17,8 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Default implementation for Minecraft versions that don't need special handling.
- * This serves as a fallback for versions like 1.21.0-1.21.4.
+ * Version-specific implementation for Minecraft 1.20.6
+ * Uses older APIs compatible with this version.
  */
 public class EconomyData extends SavedData {
     private final Map<UUID, Double> balances = new HashMap<>();
@@ -32,7 +31,7 @@ public class EconomyData extends SavedData {
     public static EconomyData load(CompoundTag tag, HolderLookup.Provider provider) {
         EconomyData data = new EconomyData();
 
-        // Load balances
+        // Load balances - 1.20.6 compatible
         if (tag.contains("balances")) {
             CompoundTag balancesTag = tag.getCompound("balances");
             for (String key : balancesTag.getAllKeys()) {
@@ -46,7 +45,7 @@ public class EconomyData extends SavedData {
             }
         }
 
-        // Load daily rewards
+        // Load daily rewards - 1.20.6 compatible
         if (tag.contains("dailyRewards")) {
             CompoundTag rewardsTag = tag.getCompound("dailyRewards");
             for (String key : rewardsTag.getAllKeys()) {
